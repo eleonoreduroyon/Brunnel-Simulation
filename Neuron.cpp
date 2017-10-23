@@ -25,15 +25,15 @@ Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refract
             Buffer_.push_back(0);
         }
       assert(TAU != 0);
-      c1 = exp(-H/TAU);
-      c2 = 20.0*(1-c1);
+      c1_ = exp(-H/TAU);
+      c2_ = 20.0*(1-c1_);
 }
 
 //=======================Destructeurs==========================
 Neuron::~Neuron(){}
 
 //========================Methodes=============================
-bool Neuron :: update(long StepsTaken, long clock){
+bool Neuron :: update(unsigned long StepsTaken){
     if(StepsTaken<=0){
         return false;
     }
@@ -43,7 +43,7 @@ bool Neuron :: update(long StepsTaken, long clock){
     m719937 get(rd());
     
 
-    long tStop = tSimulation_+StepsTaken;
+    unsigned long tStop = tSimulation_+StepsTaken;
     while(tSimulation_ < tStop){
         if(MembranePotential_ > MembranePotentialTHRESHOLD){
             //Membrane potential is above threshold.
@@ -65,9 +65,9 @@ bool Neuron :: update(long StepsTaken, long clock){
                 refractory_= false;
             }
         }else{
-            MembranePotential_= (c1*MembranePotential_)+(InputCurrent_*c2)+poisson(gen);
-            recieve(Buffer_[clock%(DelaiSTEP+1)]);
-            Buffer_[clock%(DelaiSTEP+1)]=0;
+            assert((tSimulation_%(DelaiSTEP+1))<Buffer_.size());
+            MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+poisson(gen) + Buffer_[tSimulation_%(DelaiSTEP+1)]);
+            Buffer_[tSimulation_%(DelaiSTEP+1)]=0;
          }
     ++tSimulation_;
     }
@@ -81,9 +81,9 @@ string Neuron::int2strg(double a) const{
     return str;
 }
 
-void Neuron::recieve(int valeur, double j){
-	assert(valeur >= 0);
-    MembranePotential_ += (valeur*j);
+void Neuron::recieve(unsigned long arrival, double j){
+	assert(arrival%(DelaiSTEP+1) < Buffer_.size());
+    Buffer_[arrival%(DelaiSTEP+1)] += j;
 }
 
 //====================Getters==================
@@ -91,21 +91,26 @@ double Neuron::GetMembranePotential_() const{
     return MembranePotential_;
 }
 
-long Neuron::GetTimeSpikes_() const{
+unsigned long Neuron::GetTimeSpikes_() const{
     return TimeSpikes_;
 }
 
-vector<long> Neuron::GetBuffer_() const{
+vector< unsigned long> Neuron::GetBuffer_() const{
     return Buffer_;
 }
 
-long Neuron::GetRefractoryBreakStep_() const{
+unsigned long Neuron::GetRefractoryBreakStep_() const{
 	return RefractoryBreakStep_;
 }
 
-long Neuron::GetNbrSpikes_() const{
+unsigned long Neuron::GetNbrSpikes_() const{
     return NbrSpikes_;
 }
+
+double Neuron::GetJ_() const{
+    return J_;
+}
+
 //====================Setters====================
 void Neuron::SetMembranePotential_(double MembranePotential){
     MembranePotential_=MembranePotential;
@@ -118,3 +123,6 @@ void Neuron::SetBuffer_(int i){
     Buffer_[i] += 1;
 }
 
+void Neuron::SetJ_(double j){
+    J_=j;
+}
