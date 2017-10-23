@@ -19,8 +19,7 @@
 using namespace std;
 
 //========================Constructeurs=======================
-Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false), 
-	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){
+Neuron::Neuron(){
         for(size_t n(0); n < DelaiSTEP+1;++n){
             Buffer_.push_back(0);
         }
@@ -29,18 +28,17 @@ Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refract
       c2_ = 20.0*(1-c1_);
 }
 
-//=======================Destructeurs==========================
-Neuron::~Neuron(){}
+
 
 //========================Methodes=============================
-bool Neuron :: update(unsigned long StepsTaken){
+bool Neuron :: update(long StepsTaken){
     if(StepsTaken<=0){
         return false;
     }
     bool HasSpike(false);
-    poisson_distribution<> poisson(NU_EXT*CE*H*J);//to have NU_EXT in ms/step
+    poisson_distribution<> poisson(NU_EXT*CE*H*J_); //to have NU_EXT in ms/step
     random_device rd;
-    m719937 get(rd());
+    mt19937 gen(rd());
     
 
     unsigned long tStop = tSimulation_+StepsTaken;

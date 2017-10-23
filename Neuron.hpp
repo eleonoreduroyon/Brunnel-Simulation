@@ -22,7 +22,7 @@ class Neuron{
     unsigned long RefractoryBreakStep_; //Time after spike during which MembranePotential_ =0
     double InputCurrent_; // External Current
     unsigned long tSimulation_; //Internal Clock
-    std::vector<unsigned long> Buffer_; //To deal with Delay
+    std::vector< long> Buffer_; //To deal with Delay
     double c1_; //First Constant for the calculations of MembranePotential_
     double c2_; //Second Constant for the calculations of MembranePotential_
     double J_; //Amplitude
@@ -33,7 +33,7 @@ class Neuron{
 //=============Destructeur===========
     ~Neuron();
 //=============Methodes==============
-    bool update(unsigned long StepsTaken);
+    bool update(long StepsTaken);
     void recieve(unsigned long arrival, double j); //recieves stimulus from pre synaptic neuron
     std::string int2strg(double a) const; //converts int to string
 //=============Getters===============

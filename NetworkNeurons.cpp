@@ -8,7 +8,13 @@
 
 #include "NetworkNeurons.hpp"
 #include "Constants.hpp"
-#include "Neuron.hpp"
+#include <random>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+//#include <cstdlib>
+//#include <cassert>
 
 using namespace std;
 
@@ -17,19 +23,33 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     NbrNE_ = NbrNE;
     NbrNI_ = NbrNI;
     
-    assert(NbrNeurons_!= 0);
+    //assert(NbrNeurons_ != 0);
     
     default_random_engine generator;
     uniform_int_distribution<int> distributionCE(0,NbrNE_-1);
     uniform_int_distribution<int> distributionCI(NbrNE_,NbrNeurons_-1);
     
+    int compteur(0);
+    while(compteur<NbrNeurons_){
+		Neuron n;
+		AllNeurons_.push_back(n);
+		++compteur;
+	}
+	for (size_t i(0); i< NbrNeurons_; ++i){
+		for (size_t j(0); j< NbrNeurons_; ++j){
+			NetworkConnections_[i][j] =0;
+		}
+	}
+	
+    
+    
        //initialisation of the vector Connections
     for (size_t i(0); i< NbrNeurons_; ++i){
-        AllNeurons_.SetInputCurrent_(Iext);
+        AllNeurons_[i].SetInputCurrent_(Iext);
         if(i<NbrNE_){
-            AllNeurons_[i] = JE;
+            AllNeurons_[i].SetJ_(JE);
         }else{
-            AllNeurons_[i] = JI;
+            AllNeurons_[i].SetJ_(JI);
         }
         unsigned int CompteurCE(1);
         unsigned int CompteurCI(1);
@@ -45,16 +65,13 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
 
 }
 
-~NetworkNeurons(){}
-
-void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop){
+void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop, double Iext){
     //Open file
     ofstream sortie("MembranePotential", ios::out|ios::app);
     if(sortie.fail()){
         cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
     }
     
-   
     bool HasSpikes(false);
     unsigned long clock(0);
     
@@ -64,11 +81,6 @@ void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop)
                 AllNeurons_[i].SetInputCurrent_(0.0);
                 AllNeurons_[i].SetMembranePotential_(0.0);
             }else{
-                if(i==0){
-                    AllNeurons_[i].SetInputCurrent_(Iext);
-                } else{
-                    AllNeurons_[i].SetInputCurrent_(0.0);
-                }
                 HasSpikes = AllNeurons_[i].update(1);
                 if(HasSpikes){
                     //we add a-tStart because tSimulation  starts at a
