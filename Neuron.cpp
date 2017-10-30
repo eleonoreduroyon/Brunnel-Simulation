@@ -19,7 +19,7 @@
 using namespace std;
 
 //========================Constructeurs=======================
-Neuron::Neuron(){
+Neuron::Neuron():MembranePotential_(0.0),NbrSpikes_(0),TimeSpikes_(0), refractory_(false),RefractoryBreakStep_(0),InputCurrent_(0),tSimulation_(0){
     for(size_t n(0); n < DelaiSTEP+1;++n){
         Buffer_.push_back(0);
     }
@@ -28,7 +28,7 @@ Neuron::Neuron(){
     c2_ = 20.0*(1-c1_);
 }
 
-Neuron~Neuron(){}
+Neuron::~Neuron(){}
 
 
 //========================Methodes=============================
@@ -67,9 +67,8 @@ bool Neuron :: update(long StepsTaken){
             //static declare inside the function you actually use it(convention)
            static random_device rd;
            static mt19937 gen(rd());
-           assert((((NU_THR*ETA)/(JE*TAU))*H < 3) and (((NU_THR*ETA)/(JE*TAU))*H > 1));
-           static poisson_distribution<> poisson(((NU_THR*ETA)/(JE*TAU))*H); //to have NU_EXT in ms/step
-            
+           cout<< NU_EXT*H<<endl;
+           static poisson_distribution<> poisson(NU_EXT*H);
             MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+poisson(gen)*JE + Buffer_[tSimulation_%(DelaiSTEP+1)];
             Buffer_[tSimulation_%(DelaiSTEP+1)]=0;
         }
@@ -129,5 +128,4 @@ void Neuron::SetBuffer_(int i){
 
 void Neuron::SetJ_(double j){
     J_=j;
-}    J_=j;
-}
+}   

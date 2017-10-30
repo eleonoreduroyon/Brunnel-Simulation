@@ -13,9 +13,8 @@
 using namespace std;
 
 int main(){
-    double Iext(0.0);  //Amplitude of Current
     NetworkNeurons Network(ALLN,NE,NI);
-    unsigned long tStop(5000); //Total Simulation Time
+    unsigned long tStop(1000); //Total Steps of Simulation
     Network.update(tStop);
     return 0;
 }

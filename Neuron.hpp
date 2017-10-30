@@ -52,4 +52,4 @@ public:
 
 
 #endif /* Neuron_hpp */
-#endif /* Neuron_hpp */
+

@@ -28,17 +28,16 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     uniform_int_distribution<int> distributionCE(0,NbrNE_-1);
     uniform_int_distribution<int> distributionCI(NbrNE_,NbrNeurons_-1);
     
-    int compteur(0);
+    unsigned int compteur(0);
     while(compteur<NbrNeurons_){
         Neuron n;
         AllNeurons_.push_back(n);
         ++compteur;
     }
     
-    for(int i=0; i<NbrNeurons_; i++)
-    {
+    for(size_t i(0); i<NbrNeurons_; i++){
         vector<int> j(NbrNeurons_);
-        std::fill(j.begin(),j.begin()+NbrNeurons_,0);
+        fill(j.begin(),j.begin()+NbrNeurons_,0);
         NetworkConnections_.push_back(j);
     }
     
@@ -66,7 +65,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
 
 void NetworkNeurons::update(unsigned long tStop){
     //Open file
-    ofstream sortie("MembranePotential", ios::out|ios::app);
+    ofstream sortie("TimeSpikesPerNeuronData", ios::out|ios::app);
     if(sortie.fail()){
         cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
     }
@@ -78,8 +77,8 @@ void NetworkNeurons::update(unsigned long tStop){
         for(size_t i(0); i< AllNeurons_.size(); ++i){
             HasSpikes = AllNeurons_[i].update(1);
             if(HasSpikes){
-                //we add a-tStart because tSimulation  starts at a
-                
+                //Write values of MembranePotential_ in file
+				sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << endl; //neurons from 1 to 12500
                 for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
                     if(NetworkConnections_[j][i] != 0){
                         AllNeurons_[j].recieve(clock+DelaiSTEP,NetworkConnections_[i][j]*AllNeurons_[i].GetJ_());
@@ -87,8 +86,7 @@ void NetworkNeurons::update(unsigned long tStop){
                 }
                 HasSpikes = false;
             }
-            //Write values of MembranePotential_ in file
-            sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << '/n'; //neurons from 1 to 12500
+            
         }
         ++clock;
     }
