@@ -13,10 +13,16 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-//#include <cstdlib>
 #include <cassert>
 
 using namespace std;
+
+//=================Constructeur=================
+
+/**
+* Constructeur for the class NetworkNeurons
+* @param total Number of neurons, Number of excitatory neurons, Number in inhibitory neurons
+* */
 
 NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI){
     NbrNeurons_=NbrNeurons;
@@ -25,24 +31,29 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     
     assert(NbrNeurons_ != 0);
     default_random_engine generator;
-    uniform_int_distribution<int> distributionCE(0,NbrNE_-1);
-    uniform_int_distribution<int> distributionCI(NbrNE_,NbrNeurons_-1);
+    uniform_int_distribution<unsigned int> distributionCE(0,NbrNE_-1);
+    uniform_int_distribution<unsigned int> distributionCI(NbrNE_,NbrNeurons_-1);
     
+    //initialisation of vector AllNeurons
     unsigned int compteur(0);
     while(compteur<NbrNeurons_){
         Neuron n;
         AllNeurons_.push_back(n);
         ++compteur;
     }
+       
     
-    for(size_t i(0); i<NbrNeurons_; i++){
-        vector<int> j(NbrNeurons_);
-        fill(j.begin(),j.begin()+NbrNeurons_,0);
-        NetworkConnections_.push_back(j);
-    }
+    //initialisation of the vector Connections   
+    //a vector where each line contains the index of Neurons it sends spikes to
+   unsigned int compteur1(0);
+   while(compteur1<NbrNeurons_){
+		vector<int> j;
+		NetworkConnections_.push_back(j);
+		++compteur1;
+	}
     
-    //initialisation of the vector Connections
-    for (size_t i(0); i< NbrNeurons_; ++i){
+    for (unsigned int i(0); i< NbrNeurons_; ++i){
+		assert( i<AllNeurons_.size());
         AllNeurons_[i].SetInputCurrent_(0.0);
         if(i<NbrNE_){
             AllNeurons_[i].SetJ_(JE);
@@ -52,16 +63,28 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
         unsigned int CompteurCE(1);
         unsigned int CompteurCI(1);
         while(CompteurCE<= CE){
-            NetworkConnections_[i][distributionCE(generator)] += 1;
+			assert(distributionCE(generator) < NetworkConnections_.size());
+            NetworkConnections_[distributionCE(generator)].push_back(i);
             ++CompteurCE;
         }
         while(CompteurCI<= CI){
-            NetworkConnections_[i][distributionCI(generator)] += 1;
+			assert(distributionCI(generator) < NetworkConnections_.size());
+            NetworkConnections_[distributionCI(generator)].push_back(i);
             ++CompteurCI;
         }
     }
     
 }
+
+/**
+* Destructeur for the class NetworkNeurons
+* */
+
+NetworkNeurons::~NetworkNeurons(){}
+/**
+* Updates the Network until all steps are completed
+* @param tStop: the number of steps after which the simulation stops
+* */ 
 
 void NetworkNeurons::update(unsigned long tStop){
     //Open file
@@ -75,18 +98,16 @@ void NetworkNeurons::update(unsigned long tStop){
     
     while(clock < tStop){
         for(size_t i(0); i< AllNeurons_.size(); ++i){
+			assert(i<AllNeurons_.size());
             HasSpikes = AllNeurons_[i].update(1);
             if(HasSpikes){
                 //Write values of MembranePotential_ in file
 				sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << endl; //neurons from 1 to 12500
                 for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
-                    if(NetworkConnections_[j][i] != 0){
-                        AllNeurons_[j].recieve(clock+DelaiSTEP,NetworkConnections_[i][j]*AllNeurons_[i].GetJ_());
-                    }
+                    AllNeurons_[NetworkConnections_[i][j]].recieve(clock+DelaiSTEP,AllNeurons_[i].GetJ_());
                 }
-                HasSpikes = false;
             }
-            
+            HasSpikes = false;
         }
         ++clock;
     }

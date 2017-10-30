@@ -14,7 +14,7 @@ using namespace std;
 
 int main(){
     NetworkNeurons Network(ALLN,NE,NI);
-    unsigned long tStop(1000); //Total Steps of Simulation
+    unsigned long tStop(10000);
     Network.update(tStop);
     return 0;
 }

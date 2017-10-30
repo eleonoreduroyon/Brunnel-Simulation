@@ -1,32 +1,32 @@
 #ifndef _CONSTANTS
 #define _CONSTANTS
 
-double const MembranePotentialTHRESHOLD(20.0); //Spike threshold
-double const TAU(20.0);
-double const C(1.0);
-//double RESISTANCE(20.0); //TAU/C;0 a 400; Membrane Resistance
-double const RefractoryTIME(2.0); //How long the break is
-double const H(.1);
-unsigned long const REFRACTORYSTEP = RefractoryTIME*10; //
-unsigned long const DelaiSTEP(15);
-double const VRESET(0.0);
+double const MembranePotentialTHRESHOLD(20.0); //!<Spike threshold
+double const TAU(20.0); //!<Membrane time constant
+double const RESISTANCE(20.0); //!<Membrane Resistance
+double const RefractoryTIME(2.0); //!<RefractoryTime in ms
+double const H(.1); //!<Step size
+unsigned long const REFRACTORYSTEP(RefractoryTIME/H); //!<RefractoryTime in steps
+unsigned long const DelaiTIME(1.5); //!<Synaptic delay in steps
+unsigned long const DelaiSTEP(DelaiTIME/H); //!<Synaptic delay in steps
+double const VRESET(0.0); //!<Reset MembranePotential_ after spike
 //Amplitude
-double const JE(.1);
-double const JI(-.5);
+double const JE(.1); //!<Amplitude of excitatory neurons
+double const JI(-.5); //!<Amplitude of inhibitory neurons
 //Number of Neurons
-unsigned long const ALLN(12500);
-unsigned long const NE(10000);
-unsigned long const NI(2500);
+unsigned long const ALLN(12500); //!<Number of neurons
+unsigned long const NE(10000); //!<Number of excitatory neurons
+unsigned long const NI(2500); //!<Number of inhibitory neurons
 //Frequence
-double const NU_THR(0.01);
-double const ETA(2);
+double const NU_THR(0.01); //!<Frequency needed for a neuron to reach threshold =Spike threshold/(Amplitude*CE*TAU)
+double const ETA(2); //!<Nu_EXT/NU_THR
 
 //Connections
-double const EPS(0.1); //10%
-unsigned long const CE(NE*EPS); //1000
-unsigned long const CI(NI*EPS); //250
-unsigned long const Cext(CE);
-double const g(JI/JE);
-double const NU_EXT(ETA*NU_THR*CE); //=20
+double const EPS(0.1); //!<10%
+unsigned long const CE(NE*EPS); //!<Number of excitatory connections
+unsigned long const CI(NI*EPS); //!<Number of inhibitory connections
+unsigned long const Cext(CE); //!<Number of external excitatory connections
+double const g(JI/JE); //!<Relative strength of inhibitory synapses
+double const NU_EXT(ETA*NU_THR*CE); //!<Frequency of external input
 
 #endif
