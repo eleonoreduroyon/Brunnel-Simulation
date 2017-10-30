@@ -1,6 +1,6 @@
 //
 //  Neuron.cpp
-//  
+//
 //
 //  Created by Ely on 10/2/17.
 //
@@ -12,7 +12,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
-#include <fstream> 
+#include <fstream>
 #include <cassert>
 #include <random>
 
@@ -20,12 +20,12 @@ using namespace std;
 
 //========================Constructeurs=======================
 Neuron::Neuron(){
-        for(size_t n(0); n < DelaiSTEP+1;++n){
-            Buffer_.push_back(0);
-        }
-      assert(TAU != 0);
-      c1_ = exp(-H/TAU);
-      c2_ = 20.0*(1-c1_);
+    for(size_t n(0); n < DelaiSTEP+1;++n){
+        Buffer_.push_back(0);
+    }
+    assert(TAU != 0);
+    c1_ = exp(-H/TAU);
+    c2_ = 20.0*(1-c1_);
 }
 
 
@@ -36,11 +36,10 @@ bool Neuron :: update(long StepsTaken){
         return false;
     }
     bool HasSpike(false);
-    poisson_distribution<> poisson(NU_EXT*CE*H*J_); //to have NU_EXT in ms/step
-    random_device rd;
-    mt19937 gen(rd());
+   
     
-
+    
+    //oisson rnadom spikes recieved in time
     unsigned long tStop = tSimulation_+StepsTaken;
     while(tSimulation_ < tStop){
         if(MembranePotential_ > MembranePotentialTHRESHOLD){
@@ -51,23 +50,28 @@ bool Neuron :: update(long StepsTaken){
             TimeSpikes_ = tSimulation_;
             ++NbrSpikes_;
         }
-
+        
         if(refractory_){
             //Neuron is refractory => reset memebrane potential to 0
             MembranePotential_ = 0.0;
             ++RefractoryBreakStep_;
             //Reset BreakTime when over
             if(RefractoryBreakStep_ > REFRACTORYSTEP){
-				MembranePotential_ = VRESET;
+                MembranePotential_ = VRESET;
                 RefractoryBreakStep_= 0.0;
                 refractory_= false;
             }
         }else{
             assert((tSimulation_%(DelaiSTEP+1))<Buffer_.size());
-            MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+poisson(gen) + Buffer_[tSimulation_%(DelaiSTEP+1)]);
+            //static declare inside the function you actually use it(convention)
+           static random_device rd;
+           static mt19937 gen(rd());
+           static poisson_distribution<> poisson(NU_EXT*CE*H*J_*1000); //to have NU_EXT in ms/step
+            
+            MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+poisson(gen)*JE + Buffer_[tSimulation_%(DelaiSTEP+1)];
             Buffer_[tSimulation_%(DelaiSTEP+1)]=0;
-         }
-    ++tSimulation_;
+        }
+        ++tSimulation_;
     }
     return HasSpike;
 }
@@ -80,7 +84,7 @@ string Neuron::int2strg(double a) const{
 }
 
 void Neuron::recieve(unsigned long arrival, double j){
-	assert(arrival%(DelaiSTEP+1) < Buffer_.size());
+    assert(arrival%(DelaiSTEP+1) < Buffer_.size());
     Buffer_[arrival%(DelaiSTEP+1)] += j;
 }
 
@@ -93,12 +97,12 @@ unsigned long Neuron::GetTimeSpikes_() const{
     return TimeSpikes_;
 }
 
-vector< unsigned long> Neuron::GetBuffer_() const{
+vector<long> Neuron::GetBuffer_() const{
     return Buffer_;
 }
 
 unsigned long Neuron::GetRefractoryBreakStep_() const{
-	return RefractoryBreakStep_;
+    return RefractoryBreakStep_;
 }
 
 unsigned long Neuron::GetNbrSpikes_() const{
@@ -123,4 +127,5 @@ void Neuron::SetBuffer_(int i){
 
 void Neuron::SetJ_(double j){
     J_=j;
+}    J_=j;
 }

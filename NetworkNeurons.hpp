@@ -1,6 +1,6 @@
 //
 //  NetworkNeurons.hpp
-//  
+//
 //
 //  Created by Ely on 10/23/17.
 //
@@ -14,15 +14,15 @@
 #include <vector>
 
 class NetworkNeurons{
-    private:
+private:
     unsigned long NbrNeurons_;
     unsigned long NbrNE_;
     unsigned long NbrNI_;
     std::vector<Neuron> AllNeurons_;
     std::vector<std::vector<int> > NetworkConnections_;
     
-    public:
-    NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI,double Iext);
+public:
+    NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI);
     void update(unsigned long a,unsigned long b,unsigned long tStop);
     
 };

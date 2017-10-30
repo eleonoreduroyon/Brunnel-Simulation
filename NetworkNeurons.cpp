@@ -1,6 +1,6 @@
 //
 //  NetworkNeurons.cpp
-//  
+//
 //
 //  Created by Ely on 10/23/17.
 //
@@ -18,34 +18,33 @@
 
 using namespace std;
 
-NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI, double Iext){
+NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI){
     NbrNeurons_=NbrNeurons;
     NbrNE_ = NbrNE;
     NbrNI_ = NbrNI;
     
     //assert(NbrNeurons_ != 0);
-    
     default_random_engine generator;
     uniform_int_distribution<int> distributionCE(0,NbrNE_-1);
     uniform_int_distribution<int> distributionCI(NbrNE_,NbrNeurons_-1);
     
     int compteur(0);
     while(compteur<NbrNeurons_){
-		Neuron n;
-		AllNeurons_.push_back(n);
-		++compteur;
-	}
-	for (size_t i(0); i< NbrNeurons_; ++i){
-		for (size_t j(0); j< NbrNeurons_; ++j){
-			NetworkConnections_[i][j] =0;
-		}
-	}
-	
+        Neuron n;
+        AllNeurons_.push_back(n);
+        ++compteur;
+    }
     
+    for(int i=0; i<NbrNeurons_; i++)
+    {
+        vector<int> j(NbrNeurons_);
+        std::fill(j.begin(),j.begin()+NbrNeurons_,0);
+        NetworkConnections_.push_back(j);
+    }
     
-       //initialisation of the vector Connections
+    //initialisation of the vector Connections
     for (size_t i(0); i< NbrNeurons_; ++i){
-        AllNeurons_[i].SetInputCurrent_(Iext);
+        AllNeurons_[i].SetInputCurrent_(0.0);
         if(i<NbrNE_){
             AllNeurons_[i].SetJ_(JE);
         }else{
@@ -62,10 +61,10 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
             ++CompteurCI;
         }
     }
-
+    
 }
 
-void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop, double Iext){
+void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop){
     //Open file
     ofstream sortie("MembranePotential", ios::out|ios::app);
     if(sortie.fail()){
@@ -87,7 +86,7 @@ void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop,
                     cout<< "Spikes of "<< i+1 <<" at t = "<< (AllNeurons_[i].GetTimeSpikes_()+a)*H << " ms." <<endl;
                     //
                     for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
-                        if(NetworkConnections_[i][j] != 0){
+                        if(NetworkConnections_[j][i] != 0){
                             AllNeurons_[j].recieve(clock+DelaiSTEP,NetworkConnections_[i][j]*AllNeurons_[i].GetJ_());
                         }
                     }
@@ -101,6 +100,7 @@ void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop,
     }
     //Close file
     sortie.close();
-
     
+    
+}    
 }

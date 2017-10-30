@@ -1,6 +1,6 @@
 //
 //  Neuron.hpp
-//  
+//
 //
 //  Created by Ely on 10/2/17.
 //
@@ -13,8 +13,8 @@
 #include <vector>
 
 class Neuron{
-    private:
-//=============Attributs==============
+private:
+    //=============Attributs==============
     double MembranePotential_;
     unsigned long NbrSpikes_; //Num of spikes
     unsigned long TimeSpikes_; //Time of last spike
@@ -27,23 +27,23 @@ class Neuron{
     double c2_; //Second Constant for the calculations of MembranePotential_
     double J_; //Amplitude
     
-    public:
-//=============Constructeurs=========
+public:
+    //=============Constructeurs=========
     Neuron();
-//=============Destructeur===========
-    ~Neuron();
-//=============Methodes==============
+    //=============Destructeur===========
+    
+    //=============Methodes==============
     bool update(long StepsTaken);
     void recieve(unsigned long arrival, double j); //recieves stimulus from pre synaptic neuron
     std::string int2strg(double a) const; //converts int to string
-//=============Getters===============
+    //=============Getters===============
     double GetMembranePotential_() const;
     unsigned long GetTimeSpikes_() const;
-    std::vector<unsigned long> GetBuffer_() const;
+    std::vector<long> GetBuffer_() const;
     unsigned long GetRefractoryBreakStep_() const;
     unsigned long GetNbrSpikes_() const;
     double GetJ_() const;
-//=============Setters===============
+    //=============Setters===============
     void SetMembranePotential_(double MembranePotential);
     void SetInputCurrent_(double InputCurrent);
     void SetBuffer_(int i);
@@ -51,4 +51,5 @@ class Neuron{
 };
 
 
+#endif /* Neuron_hpp */
 #endif /* Neuron_hpp */
