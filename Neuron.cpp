@@ -67,9 +67,8 @@ bool Neuron :: update(long StepsTaken){
             //static declare inside the function you actually use it(convention)
            static random_device rd;
            static mt19937 gen(rd());
-           cout<< NU_EXT*H<<endl;
            static poisson_distribution<> poisson(NU_EXT*H);
-            MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+poisson(gen)*JE + Buffer_[tSimulation_%(DelaiSTEP+1)];
+            MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+(poisson(gen)*JE) + Buffer_[tSimulation_%(DelaiSTEP+1)];
             Buffer_[tSimulation_%(DelaiSTEP+1)]=0;
         }
         ++tSimulation_;

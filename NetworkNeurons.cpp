@@ -14,7 +14,7 @@
 #include <fstream>
 #include <vector>
 //#include <cstdlib>
-//#include <cassert>
+#include <cassert>
 
 using namespace std;
 
@@ -23,7 +23,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     NbrNE_ = NbrNE;
     NbrNI_ = NbrNI;
     
-    //assert(NbrNeurons_ != 0);
+    assert(NbrNeurons_ != 0);
     default_random_engine generator;
     uniform_int_distribution<int> distributionCE(0,NbrNE_-1);
     uniform_int_distribution<int> distributionCI(NbrNE_,NbrNeurons_-1);
@@ -65,7 +65,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
 
 void NetworkNeurons::update(unsigned long tStop){
     //Open file
-    ofstream sortie("TimeSpikesPerNeuronData", ios::out|ios::app);
+    ofstream sortie("TimeSpikesPerNeuronData.txt", ios::out|ios::app);
     if(sortie.fail()){
         cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
     }
