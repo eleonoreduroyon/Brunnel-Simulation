@@ -23,7 +23,7 @@ private:
     
 public:
     NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI);
-    void update(unsigned long a,unsigned long b,unsigned long tStop);
+    void update(unsigned long tStop);
     
 };
 #endif /* NetworkNeurons_hpp */

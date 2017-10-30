@@ -28,6 +28,7 @@ Neuron::Neuron(){
     c2_ = 20.0*(1-c1_);
 }
 
+Neuron~Neuron(){}
 
 
 //========================Methodes=============================
@@ -66,7 +67,8 @@ bool Neuron :: update(long StepsTaken){
             //static declare inside the function you actually use it(convention)
            static random_device rd;
            static mt19937 gen(rd());
-           static poisson_distribution<> poisson(NU_EXT*CE*H*J_*1000); //to have NU_EXT in ms/step
+           assert((((NU_THR*ETA)/(JE*TAU))*H < 3) and (((NU_THR*ETA)/(JE*TAU))*H > 1));
+           static poisson_distribution<> poisson(((NU_THR*ETA)/(JE*TAU))*H); //to have NU_EXT in ms/step
             
             MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+poisson(gen)*JE + Buffer_[tSimulation_%(DelaiSTEP+1)];
             Buffer_[tSimulation_%(DelaiSTEP+1)]=0;

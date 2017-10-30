@@ -64,7 +64,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     
 }
 
-void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop){
+void NetworkNeurons::update(unsigned long tStop){
     //Open file
     ofstream sortie("MembranePotential", ios::out|ios::app);
     if(sortie.fail()){
@@ -76,31 +76,23 @@ void NetworkNeurons::update(unsigned long a,unsigned long b,unsigned long tStop)
     
     while(clock < tStop){
         for(size_t i(0); i< AllNeurons_.size(); ++i){
-            if((clock<a) or (clock>b)){  //outside the interval
-                AllNeurons_[i].SetInputCurrent_(0.0);
-                AllNeurons_[i].SetMembranePotential_(0.0);
-            }else{
-                HasSpikes = AllNeurons_[i].update(1);
-                if(HasSpikes){
-                    //we add a-tStart because tSimulation  starts at a
-                    cout<< "Spikes of "<< i+1 <<" at t = "<< (AllNeurons_[i].GetTimeSpikes_()+a)*H << " ms." <<endl;
-                    //
-                    for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
-                        if(NetworkConnections_[j][i] != 0){
-                            AllNeurons_[j].recieve(clock+DelaiSTEP,NetworkConnections_[i][j]*AllNeurons_[i].GetJ_());
-                        }
+            HasSpikes = AllNeurons_[i].update(1);
+            if(HasSpikes){
+                //we add a-tStart because tSimulation  starts at a
+                
+                for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
+                    if(NetworkConnections_[j][i] != 0){
+                        AllNeurons_[j].recieve(clock+DelaiSTEP,NetworkConnections_[i][j]*AllNeurons_[i].GetJ_());
                     }
-                    HasSpikes = false;
                 }
+                HasSpikes = false;
             }
             //Write values of MembranePotential_ in file
-            sortie << AllNeurons_[i].int2strg(AllNeurons_[i].GetMembranePotential_()) << endl;
+            sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << '/n'; //neurons from 1 to 12500
         }
         ++clock;
     }
     //Close file
     sortie.close();
-    
-    
-}    
 }
+

@@ -20,11 +20,14 @@ unsigned long const NE(300);
 unsigned long const NI(200);
 //Frequence
 double const NU_THR(0.01);
-double const NU_EXT(g*NU_THR);
+double const ETA(2);
+double const NU_EXT(ETA*NU_THR*CE);
 //Connections
-unsigned long const CE(NE*0.01);
-unsigned long const CI(NI*0.01);
+unisgned double EPS(.01); //10%
+unsigned long const CE(NE*EPS);
+unsigned long const CI(NI*EPS);
 unsigned long const Cext(CE);
+double const g(JI/JE);
 
 
 #endif

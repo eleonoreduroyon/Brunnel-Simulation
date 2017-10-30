@@ -31,7 +31,7 @@ public:
     //=============Constructeurs=========
     Neuron();
     //=============Destructeur===========
-    
+    ~Neuron();
     //=============Methodes==============
     bool update(long StepsTaken);
     void recieve(unsigned long arrival, double j); //recieves stimulus from pre synaptic neuron
