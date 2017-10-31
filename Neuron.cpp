@@ -22,6 +22,7 @@ using namespace std;
 /**
 * Constructeur for the class Neuron
 * */
+
 Neuron::Neuron():MembranePotential_(0.0),NbrSpikes_(0),TimeSpikes_(0), refractory_(false),RefractoryBreakStep_(0),InputCurrent_(0),tSimulation_(0){
     for(size_t n(0); n < DelaiSTEP+1;++n){
         Buffer_.push_back(0);
@@ -36,8 +37,8 @@ Neuron::Neuron():MembranePotential_(0.0),NbrSpikes_(0),TimeSpikes_(0), refractor
 /**
 * Destructeur for the class Neuron
 * */
-Neuron::~Neuron(){}
 
+Neuron::~Neuron(){}
 
 //========================Methodes=============================
 
@@ -47,7 +48,7 @@ Neuron::~Neuron(){}
 * @return bool if neuron spikes or not
 * */ 
 
-bool Neuron :: update(long StepsTaken){
+bool Neuron :: update(long StepsTaken,double eta){
     if(StepsTaken<=0){
         return false;
     }
@@ -78,7 +79,7 @@ bool Neuron :: update(long StepsTaken){
            //static declare inside the function you actually use it(convention)
            static random_device rd;
            static mt19937 gen(rd());
-           static poisson_distribution<> poisson(NU_EXT*H);
+           static poisson_distribution<> poisson(NU_THR*eta*H);
            assert(tSimulation_%(DelaiSTEP+1) < Buffer_.size());
            MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+(poisson(gen)*JE) + Buffer_[tSimulation_%(DelaiSTEP+1)];
            Buffer_[tSimulation_%(DelaiSTEP+1)]=0;

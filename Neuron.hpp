@@ -33,7 +33,7 @@ public:
     //=============Destructeur===========
     ~Neuron();
     //=============Methodes==============
-    bool update(long StepsTaken);
+    bool update(long StepsTaken, double eta);
     void recieve(unsigned long arrival, double j); 
     std::string int2strg(double a) const; 
     //=============Getters===============

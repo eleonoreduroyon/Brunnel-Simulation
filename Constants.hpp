@@ -12,21 +12,16 @@ unsigned long const DelaiSTEP(DelaiTIME/H); //!<Synaptic delay in steps
 double const VRESET(0.0); //!<Reset MembranePotential_ after spike
 //Amplitude
 double const JE(.1); //!<Amplitude of excitatory neurons
-double const JI(-.5); //!<Amplitude of inhibitory neurons
 //Number of Neurons
 unsigned long const ALLN(12500); //!<Number of neurons
 unsigned long const NE(10000); //!<Number of excitatory neurons
 unsigned long const NI(2500); //!<Number of inhibitory neurons
 //Frequence
-double const NU_THR(0.01); //!<Frequency needed for a neuron to reach threshold =Spike threshold/(Amplitude*CE*TAU)
-double const ETA(2); //!<Nu_EXT/NU_THR
-
+double const NU_THR(MembranePotentialTHRESHOLD/(JE*TAU)); //!<Frequency needed for a neuron to reach threshold =thresh/(JE*TAU)
 //Connections
 double const EPS(0.1); //!<10%
 unsigned long const CE(NE*EPS); //!<Number of excitatory connections
 unsigned long const CI(NI*EPS); //!<Number of inhibitory connections
 unsigned long const Cext(CE); //!<Number of external excitatory connections
-double const g(JI/JE); //!<Relative strength of inhibitory synapses
-double const NU_EXT(ETA*NU_THR*CE); //!<Frequency of external input
 
 #endif

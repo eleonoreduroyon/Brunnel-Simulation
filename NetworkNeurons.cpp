@@ -24,10 +24,11 @@ using namespace std;
 * @param total Number of neurons, Number of excitatory neurons, Number in inhibitory neurons
 * */
 
-NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI){
+NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI, double eta){
     NbrNeurons_=NbrNeurons;
     NbrNE_ = NbrNE;
     NbrNI_ = NbrNI;
+    ETA_= eta;
     
     assert(NbrNeurons_ != 0);
     default_random_engine generator;
@@ -58,7 +59,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
         if(i<NbrNE_){
             AllNeurons_[i].SetJ_(JE);
         }else{
-            AllNeurons_[i].SetJ_(JI);
+            AllNeurons_[i].SetJ_(JE*g);
         }
         unsigned int CompteurCE(1);
         unsigned int CompteurCI(1);
@@ -83,12 +84,12 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
 NetworkNeurons::~NetworkNeurons(){}
 /**
 * Updates the Network until all steps are completed
-* @param tStop: the number of steps after which the simulation stops
+* @param tStop: the number of steps after which the simulation stops and title: name file
 * */ 
 
-void NetworkNeurons::update(unsigned long tStop){
+void NetworkNeurons::update(unsigned long tStop, string title){
     //Open file
-    ofstream sortie("TimeSpikesPerNeuronData.txt", ios::out|ios::app);
+    ofstream sortie( title, ios::out|ios::app);
     if(sortie.fail()){
         cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
     }
@@ -99,7 +100,7 @@ void NetworkNeurons::update(unsigned long tStop){
     while(clock < tStop){
         for(size_t i(0); i< AllNeurons_.size(); ++i){
 			assert(i<AllNeurons_.size());
-            HasSpikes = AllNeurons_[i].update(1);
+            HasSpikes = AllNeurons_[i].update(1,ETA_);
             if(HasSpikes){
                 //Write values of MembranePotential_ in file
 				sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << endl; //neurons from 1 to 12500

@@ -7,6 +7,7 @@
 //
 
 #include "NetworkNeurons.hpp"
+#include "Experiment.hpp"
 #include "Constants.hpp"
 #include <iostream>
 
@@ -14,8 +15,29 @@ using namespace std;
 
 int main(){
     NetworkNeurons Network(ALLN,NE,NI);
+    Experiment exp(Network);
     unsigned long tStop(10000);
-    Network.update(tStop);
+    /**
+     * Almost fully synchronized network, neurons firing regularly
+     * at high rates
+     **/
+    exp.runFig(3,2,tStop,"ValuesFigA.txt");
+    /**
+     * Fast oscillation of the global activity, neurons firing
+     * irregularly at a rate that is lower than the global
+     * frequency
+     **/
+    exp.runFig(6,4,tStop,"ValuesFigB.txt");
+    /**
+     * Stationary global activity, irregularly firing
+     * neurons
+     **/
+    exp.runFig(5,2,tStop,"ValuesFigC.txt");
+    /**
+     * Slow oscillation of the global activity, neurons firing 
+     * irregularly at very low rates
+     **/
+    exp.runFig(4.5,0.9,tStop,"ValuesFigD.txt");
     return 0;
 }
 
