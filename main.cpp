@@ -14,8 +14,7 @@
 using namespace std;
 
 int main(){
-    NetworkNeurons Network(ALLN,NE,NI);
-    Experiment exp(Network);
+    Experiment exp();
     unsigned long tStop(10000);
     /**
      * Almost fully synchronized network, neurons firing regularly

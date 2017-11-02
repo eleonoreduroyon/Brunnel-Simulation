@@ -82,6 +82,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
 * */
 
 NetworkNeurons::~NetworkNeurons(){}
+
 /**
 * Updates the Network until all steps are completed
 * @param tStop: the number of steps after which the simulation stops and title: name file

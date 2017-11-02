@@ -12,9 +12,6 @@
 #include <stdio.h>
 
 class Experiment{
-    private:
-    NetworkNeurons Network_;
-    
     public:
     Experiment();
     ~Experiment();

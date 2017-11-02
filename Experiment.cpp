@@ -31,6 +31,5 @@ Experiment::~Experiment(){}
 
 void Experiment::runFig(double g, double eta, unsigned long stop, std::string title){
     NetworkNeurons net(ALLN,NE,NI,g,eta);
-    Network_ = net;
-    Network_.update(stop,title);
+    net.update(stop,title);
 }
