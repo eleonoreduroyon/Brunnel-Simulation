@@ -19,17 +19,9 @@ using namespace std;
 
 //=================Constructeur=================
 
-/**
-* Constructeur for the class NetworkNeurons
-* @param total Number of neurons, Number of excitatory neurons, Number in inhibitory neurons
-* */
 
-NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI, double eta){
-    NbrNeurons_=NbrNeurons;
-    NbrNE_ = NbrNE;
-    NbrNI_ = NbrNI;
-    ETA_= eta;
-    
+NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, unsigned long NbrNI, double g,double eta):NbrNeurons_(NbrNeurons),NbrNE_(NbrNE),NbrNI_(NbrNI),CE_(NbrNE_*EPS),CI_(NbrNI_*EPS),ETA_(eta){
+
     assert(NbrNeurons_ != 0);
     default_random_engine generator;
     uniform_int_distribution<unsigned int> distributionCE(0,NbrNE_-1);
@@ -42,7 +34,6 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
         AllNeurons_.push_back(n);
         ++compteur;
     }
-       
     
     //initialisation of the vector Connections   
     //a vector where each line contains the index of Neurons it sends spikes to
@@ -59,7 +50,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
         if(i<NbrNE_){
             AllNeurons_[i].SetJ_(JE);
         }else{
-            AllNeurons_[i].SetJ_(JE*g);
+            AllNeurons_[i].SetJ_(JE*-g);
         }
         unsigned int CompteurCE(1);
         unsigned int CompteurCI(1);
@@ -77,16 +68,12 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     
 }
 
-/**
-* Destructeur for the class NetworkNeurons
-* */
+//===================Destructeur==================
 
 NetworkNeurons::~NetworkNeurons(){}
 
-/**
-* Updates the Network until all steps are completed
-* @param tStop: the number of steps after which the simulation stops and title: name file
-* */ 
+//===================Methodes==================
+
 
 void NetworkNeurons::update(unsigned long tStop, string title){
     //Open file
@@ -117,3 +104,31 @@ void NetworkNeurons::update(unsigned long tStop, string title){
     sortie.close();
 }
 
+//=====================Getters=============
+std::vector<Neuron> NetworkNeurons::GetAllNeurons_() const {
+	return AllNeurons_;
+}
+
+unsigned long NetworkNeurons::GetNbrNE_() const {
+    return NbrNE_;
+}
+
+std::vector<Neuron> NetworkNeurons::GetNetworkConnections_() const {
+    return NetworkConnections_;
+}
+
+unsigned long NetworkNeurons::GetNbrNeurons_() const {
+    return NbrNeurons_;
+}
+
+unsigned long NetworkNeurons::GetCE_() const {
+    return CE_;
+}
+
+unsigned long NetworkNeurons::GetCI_() const{
+    return CI_;
+}
+
+unsigned long NetworkNeurons::GetNbrNI_() const {
+    return NbrNI_;
+}

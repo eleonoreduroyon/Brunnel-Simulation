@@ -20,8 +20,6 @@ unsigned long const NI(2500); //!<Number of inhibitory neurons
 double const NU_THR(MembranePotentialTHRESHOLD/(JE*TAU)); //!<Frequency needed for a neuron to reach threshold =thresh/(JE*TAU)
 //Connections
 double const EPS(0.1); //!<10%
-unsigned long const CE(NE*EPS); //!<Number of excitatory connections
-unsigned long const CI(NI*EPS); //!<Number of inhibitory connections
 unsigned long const Cext(CE); //!<Number of external excitatory connections
 
 #endif

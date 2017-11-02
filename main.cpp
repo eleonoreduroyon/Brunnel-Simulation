@@ -14,7 +14,7 @@
 using namespace std;
 
 int main(){
-    Experiment exp();
+    Experiment exp;
     unsigned long tStop(10000);
     /**
      * Almost fully synchronized network, neurons firing regularly
@@ -26,17 +26,17 @@ int main(){
      * irregularly at a rate that is lower than the global
      * frequency
      **/
-    exp.runFig(6,4,tStop,"ValuesFigB.txt");
+    //exp.runFig(6,4,tStop,"ValuesFigB.txt");
     /**
      * Stationary global activity, irregularly firing
      * neurons
      **/
-    exp.runFig(5,2,tStop,"ValuesFigC.txt");
+    //exp.runFig(5,2,tStop,"ValuesFigC.txt");
     /**
      * Slow oscillation of the global activity, neurons firing 
      * irregularly at very low rates
      **/
-    exp.runFig(4.5,0.9,tStop,"ValuesFigD.txt");
+    //exp.runFig(4.5,0.9,tStop,"ValuesFigD.txt");
     return 0;
 }
 

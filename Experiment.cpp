@@ -8,26 +8,17 @@
 
 #include "Experiment.hpp"
 #include "NetworkNeurons.hpp"
+#include "Constants.hpp"
 
 //===============Constructeur================
-
-/**
- * Constructeur for the class Experiment
- * */
 
 Experiment ::Experiment(){}
 
 //===============Destructeur================
-/**
- * Destructeur for the class Experiment
- * */
+
 Experiment::~Experiment(){}
 
 //===============Methode================
-
-/**
- *  @param Network of Neurons
- * */
 
 void Experiment::runFig(double g, double eta, unsigned long stop, std::string title){
     NetworkNeurons net(ALLN,NE,NI,g,eta);
