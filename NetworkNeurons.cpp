@@ -15,6 +15,7 @@
 #include <vector>
 #include <cassert>
 
+
 using namespace std;
 
 //=================Constructeur=================
@@ -39,7 +40,7 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     //a vector where each line contains the index of Neurons it sends spikes to
    unsigned int compteur1(0);
    while(compteur1<NbrNeurons_){
-		vector<int> j;
+		vector<size_t> j;
 		NetworkConnections_.push_back(j);
 		++compteur1;
 	}
@@ -54,12 +55,12 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
         }
         unsigned int CompteurCE(1);
         unsigned int CompteurCI(1);
-        while(CompteurCE<= CE){
+        while(CompteurCE<= CE_){
 			assert(distributionCE(generator) < NetworkConnections_.size());
             NetworkConnections_[distributionCE(generator)].push_back(i);
             ++CompteurCE;
         }
-        while(CompteurCI<= CI){
+        while(CompteurCI<= CI_){
 			assert(distributionCI(generator) < NetworkConnections_.size());
             NetworkConnections_[distributionCI(generator)].push_back(i);
             ++CompteurCI;
@@ -93,7 +94,7 @@ void NetworkNeurons::update(unsigned long tStop, string title){
                 //Write values of MembranePotential_ in file
 				sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << endl; //neurons from 1 to 12500
                 for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
-                    AllNeurons_[NetworkConnections_[i][j]].recieve(clock+DelaiSTEP,AllNeurons_[i].GetJ_());
+                    AllNeurons_[NetworkConnections_[i][j]].receive(clock+DelaiSTEP,AllNeurons_[i].GetJ_());
                 }
             }
             HasSpikes = false;
@@ -113,7 +114,7 @@ unsigned long NetworkNeurons::GetNbrNE_() const {
     return NbrNE_;
 }
 
-std::vector<Neuron> NetworkNeurons::GetNetworkConnections_() const {
+std::vector<std::vector<size_t> > NetworkNeurons::GetNetworkConnections_() const {
     return NetworkConnections_;
 }
 

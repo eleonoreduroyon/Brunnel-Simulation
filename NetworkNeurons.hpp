@@ -12,6 +12,7 @@
 #include "Neuron.hpp"
 #include <stdio.h>
 #include <vector>
+#include <string>
 
 class NetworkNeurons{
 private:
@@ -23,7 +24,7 @@ private:
     unsigned long CI_; //!<Number of inhibitory connections
     double ETA_; //!<Nu_EXT/NU_THR
     std::vector<Neuron> AllNeurons_;//!<Vector of all Neurons
-    std::vector<std::vector<int> > NetworkConnections_; //!<Vector of all Network connections within the network
+    std::vector<std::vector<size_t> > NetworkConnections_; //!<Vector of all Network connections within the network
     
 public:
     //=============Constructeurs=========
@@ -63,7 +64,7 @@ public:
      * Getter for the vector regrouping all the network connections
      * @return NetworkConnections_
      * */
-    std::vector<Neuron> GetNetworkConnections_() const ;
+    std::vector<std::vector<size_t> > GetNetworkConnections_() const ;
     
     /**
      * Getter for the number of neurons

@@ -20,9 +20,9 @@ using namespace std;
 
 //========================Constructeurs=======================
 
-Neuron::Neuron():MembranePotential_(0.0),NbrSpikes_(0),TimeSpikes_(0), refractory_(false),RefractoryBreakStep_(0),InputCurrent_(0),tSimulation_(0){
+Neuron::Neuron():MembranePotential_(0.0),NbrSpikes_(0),TimeSpikes_(0), refractory_(false),RefractoryBreakStep_(0),InputCurrent_(0),tSimulation_(0), J_(JE),BackgroundNoise_(true){
     for(size_t n(0); n < DelaiSTEP+1;++n){
-        Buffer_.push_back(0);
+        Buffer_.push_back(0.0);
     }
     assert(TAU != 0);
     c1_ = exp(-H/TAU);
@@ -68,7 +68,10 @@ bool Neuron :: update(long StepsTaken,double eta){
            static mt19937 gen(rd());
            static poisson_distribution<> poisson(NU_THR*eta*H);
            assert(tSimulation_%(DelaiSTEP+1) < Buffer_.size());
-           MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_)+(poisson(gen)*JE) + Buffer_[tSimulation_%(DelaiSTEP+1)];
+           MembranePotential_= (c1_*MembranePotential_)+(InputCurrent_*c2_) + Buffer_[tSimulation_%(DelaiSTEP+1)];
+            if(BackgroundNoise_){
+                MembranePotential_+=(poisson(gen)*JE);
+            }
            Buffer_[tSimulation_%(DelaiSTEP+1)]=0;
         }
         ++tSimulation_;
@@ -86,7 +89,7 @@ string Neuron::int2strg(double a) const{
 
 
 
-void Neuron::recieve(unsigned long arrival, double j){
+void Neuron::receive(unsigned long arrival, double j){
     assert(arrival%(DelaiSTEP+1) < Buffer_.size());
     Buffer_[arrival%(DelaiSTEP+1)] += j;
 }
@@ -125,4 +128,12 @@ void Neuron::SetInputCurrent_(double InputCurrent){
 
 void Neuron::SetJ_(double j){
     J_=j;
-}   
+}
+
+void Neuron::SetBackgroundNoise_(bool backgroundNoise){
+    BackgroundNoise_=backgroundNoise;
+}
+
+void Neuron::SetBuffer_(int i, double j){
+    Buffer_[i] += j;
+}

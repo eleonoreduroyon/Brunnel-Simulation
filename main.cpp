@@ -17,10 +17,11 @@ int main(){
     Experiment exp;
     unsigned long tStop(10000);
     /**
-     * Almost fully synchronized network, neurons firing regularly
+     * Almost fully synchronized network, neurons firing 
+     * regularly
      * at high rates
      **/
-    exp.runFig(3,2,tStop,"ValuesFigA.txt");
+    exp.runFig(5,2,tStop,"ValuesFigA.txt");
     /**
      * Fast oscillation of the global activity, neurons firing
      * irregularly at a rate that is lower than the global

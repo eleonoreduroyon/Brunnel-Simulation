@@ -22,10 +22,11 @@ private:
     unsigned long RefractoryBreakStep_; //!<Time after spike 
     double InputCurrent_; //!<External Current
     unsigned long tSimulation_; //!<Internal Clock
-    std::vector< long> Buffer_; //!<To deal with Delay
+    std::vector< double> Buffer_; //!<To deal with Delay
     double c1_; //!<First Constant for the calculations of MembranePotential_
     double c2_; //!<Second Constant for the calculations of MembranePotential_
     double J_; //!<Amplitude of neuron
+    bool BackgroundNoise_; //!<Presence of External Stimulation(For Testing Purposes)
     
 public:
     //=============Constructeurs=========
@@ -64,7 +65,7 @@ public:
      * @param time of arrival (in steps) and amplitude of firing neuron
      * */ 
     
-    void recieve(unsigned long arrival, double j); 
+    void receive(unsigned long arrival, double j); 
 
     //=============Getters===============
     
@@ -126,6 +127,20 @@ public:
      * */
     
     void SetJ_(double j);
+    
+    /**
+     * Setter for the value of the BackgroundNoise_
+     * @param Presence of background noise or not
+     * */
+    
+    void SetBackgroundNoise_(bool backgroundnoise);
+    
+    /**
+     * Setter for the value of the buffer for a particular index
+     * @param index i, j amplitude received
+     * */
+    
+    void SetBuffer_(int i, double j);
 };
 
 
