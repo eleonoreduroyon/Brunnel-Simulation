@@ -25,3 +25,8 @@ Two Neurons:
 7)Checks that my buffer works currently and a connected neuron receives the spiking neuron's amplitude DelaiSTEPs later(no background noise)
 8)Checks that a connected neuron can spike after receiving the spiking neuron's amplitude DelaiSTEPs later(no background noise)
 
+NEED TO KNOW:
+To execute my program: ./Neurons
+To execute my test file: ./NeuronsTEST
+My program generates a new file everytime by deleting the previous one.
+I used https://cs116-plot.antoinealb.net/ to generate my histogram.

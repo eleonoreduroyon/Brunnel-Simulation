@@ -28,15 +28,10 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     uniform_int_distribution<unsigned int> distributionCE(0,NbrNE_-1);
     uniform_int_distribution<unsigned int> distributionCI(NbrNE_,NbrNeurons_-1);
     
-    //initialisation of vector AllNeurons
-    unsigned int compteur(0);
-    while(compteur<NbrNeurons_){
-        Neuron n;
-        AllNeurons_.push_back(n);
-        ++compteur;
-    }
+    //initialisation of the vector AllNeurons
+    AllNeurons_.resize(NbrNeurons_);
     
-    //initialisation of the vector Connections   
+    //initialisation of the vector Connections
     //a vector where each line contains the index of Neurons it sends spikes to
    unsigned int compteur1(0);
    while(compteur1<NbrNeurons_){
@@ -77,6 +72,14 @@ NetworkNeurons::~NetworkNeurons(){}
 
 
 void NetworkNeurons::update(unsigned long tStop, string title){
+    //Replaces file if exists
+    const char* titre = title.c_str();
+    if( remove( titre ) != 0 ){
+        cout<<"File creating" <<endl;
+    }else{
+        cout<<"File successfully replaced" <<endl;
+    }
+    
     //Open file
     ofstream sortie( title, ios::out|ios::app);
     if(sortie.fail()){
@@ -92,7 +95,7 @@ void NetworkNeurons::update(unsigned long tStop, string title){
             HasSpikes = AllNeurons_[i].update(1,ETA_);
             if(HasSpikes){
                 //Write values of MembranePotential_ in file
-				sortie << (AllNeurons_[i].GetTimeSpikes_())*H<<"   "<< i+1 << endl; //neurons from 1 to 12500
+				sortie << (AllNeurons_[i].GetTimeSpikes_())*H*0.1<<"   "<< i+1 << endl; //neurons from 1 to 12500
                 for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
                     AllNeurons_[NetworkConnections_[i][j]].receive(clock+DelaiSTEP,AllNeurons_[i].GetJ_());
                 }
