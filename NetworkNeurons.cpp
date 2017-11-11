@@ -43,10 +43,11 @@ NetworkNeurons::NetworkNeurons(unsigned long NbrNeurons,unsigned long NbrNE, uns
     for (unsigned int i(0); i< NbrNeurons_; ++i){
 		assert( i<AllNeurons_.size());
         AllNeurons_[i].SetInputCurrent_(0.0);
+        Neuron Neuroni(AllNeurons_[i]);
         if(i<NbrNE_){
-            AllNeurons_[i].SetJ_(JE);
+            Neuroni.SetJ_(JE);
         }else{
-            AllNeurons_[i].SetJ_(JE*-g);
+            Neuroni.SetJ_(JE*-g);
         }
         unsigned int CompteurCE(1);
         unsigned int CompteurCI(1);
@@ -92,12 +93,13 @@ void NetworkNeurons::update(unsigned long tStop, string title){
     while(clock < tStop){
         for(size_t i(0); i< AllNeurons_.size(); ++i){
 			assert(i<AllNeurons_.size());
-            HasSpikes = AllNeurons_[i].update(1,ETA_);
+            Neuron Neuroni(AllNeurons_[i]);
+            HasSpikes = Neuroni.update(1,ETA_);
             if(HasSpikes){
                 //Write values of MembranePotential_ in file
-				sortie << (AllNeurons_[i].GetTimeSpikes_())*H*0.1<<"   "<< i+1 << endl; //neurons from 1 to 12500
+				sortie << (Neuroni.GetTimeSpikes_())*H<<"   "<< i+1 << endl; //neurons from 1 to 12500
                 for(size_t j(0); j < NetworkConnections_[i].size(); ++j){
-                    AllNeurons_[NetworkConnections_[i][j]].receive(clock+DelaiSTEP,AllNeurons_[i].GetJ_());
+                    AllNeurons_[NetworkConnections_[i][j]].receive(clock+DelaiSTEP,Neuroni.GetJ_());
                 }
             }
             HasSpikes = false;

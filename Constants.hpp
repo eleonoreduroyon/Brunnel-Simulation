@@ -17,7 +17,7 @@ unsigned long const ALLN(12500); //!<Number of neurons
 unsigned long const NE(10000); //!<Number of excitatory neurons
 unsigned long const NI(2500); //!<Number of inhibitory neurons
 //Frequence
-double const NU_THR(MembranePotentialTHRESHOLD/(JE*TAU)); //!<Frequency needed for a neuron to reach threshold =thresh/(JE*TAU)
+double const NU_THR(MembranePotentialTHRESHOLD/(JE*TAU)); //!<Frequency needed for a neuron to reach threshold
 //Connections
 double const EPS(0.1); //!<10%
 

@@ -21,23 +21,23 @@ int main(){
      * regularly
      * at high rates
      **/
-    exp.runFig(5,2,tStop,"ValuesFigA.txt");
+    exp.runFig(3,2,tStop,"ValuesFigA.txt");
     /**
      * Fast oscillation of the global activity, neurons firing
      * irregularly at a rate that is lower than the global
      * frequency
      **/
-    //exp.runFig(6,4,tStop,"ValuesFigB.txt");
+    exp.runFig(6,4,tStop,"ValuesFigB.txt");
     /**
      * Stationary global activity, irregularly firing
      * neurons
      **/
-    //exp.runFig(5,2,tStop,"ValuesFigC.txt");
+    exp.runFig(5,2,tStop,"ValuesFigC.txt");
     /**
      * Slow oscillation of the global activity, neurons firing 
      * irregularly at very low rates
      **/
-    //exp.runFig(4.5,0.9,tStop,"ValuesFigD.txt");
+    exp.runFig(4.5,0.9,tStop,"ValuesFigD.txt");
     return 0;
 }
 

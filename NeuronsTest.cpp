@@ -39,29 +39,43 @@ TEST(NeuronsTEST, Nu_THRESHValues){
 
 //===============NumberOfConnections==================
 
-TEST(NeuronsTEST, NumberOfConnections){
+TEST(NeuronsTEST, NumberEConnections){
     NetworkNeurons net(100,75,25,5,2);
+    vector <unsigned int> Connections;
+    Connections.resize(net.GetNbrNeurons_());
     for(size_t k(0); k <net.GetNbrNeurons_(); ++k){
-		assert(k < net.GetNbrNeurons_());
-        unsigned long NumberOfConnectionsCE(0);
-        unsigned long NumberOfConnectionsCI(0);
-        for(size_t i(0); i< net.GetNbrNeurons_(); ++i){
-            assert(i < net.GetNbrNeurons_());
-            for(size_t j(0); j< net.GetNetworkConnections_()[i].size();++j){
-                assert(j < net.GetNetworkConnections_()[i].size());
-                if(net.GetNetworkConnections_()[i][j] == k){
-                    if(i< net.GetNbrNE_()){
-                        ++NumberOfConnectionsCE;
-                    }else{
-                        ++NumberOfConnectionsCI;
-                    }
-                }
+        assert(k < net.GetNbrNeurons_());
+        for(size_t i(0); i< net.GetNbrNE_(); ++i){
+            assert(i <net.GetNbrNE_());
+            for(size_t j(0); i<  net.GetNetworkConnections_()[i].size()); ++j){
+                assert(j<net.GetNetworkConnections_()[i].size());
+                ++Connections[net.GetNetworkConnections_()[i][j]];
             }
         }
-    
-    EXPECT_EQ(NumberOfConnectionsCE,net.GetCE_());
-    EXPECT_EQ(NumberOfConnectionsCI,net.GetCI_());
+    }
+    for(size_t k(0); k <net.GetNbrNeurons_(); ++k){
+        EXPECT_EQ(net.GetCE_(),Connections[k]);
+    }
 }
+
+
+TEST(NeuronsTEST, NumberIConnections){
+    NetworkNeurons net(100,75,25,5,2);
+    vector <unsigned int> Connections;
+    Connections.resize(net.GetNbrNeurons_());
+    for(size_t k(0); k <net.GetNbrNeurons_(); ++k){
+        assert(k < net.GetNbrNeurons_());
+        for(size_t i(0); i< net.GetNbrNI_(); ++i){
+            assert(i <net.GetNbrNI_());
+            for(size_t j(0); i<  net.GetNetworkConnections_()[i].size()); ++j){
+                assert(j<net.GetNetworkConnections_()[i].size());
+                ++Connections[net.GetNetworkConnections_()[i][j]];
+            }
+        }
+    }
+    for(size_t k(0); k <net.GetNbrNeurons_(); ++k){
+        EXPECT_EQ(net.GetCI_(),Connections[k]);
+    }
 }
 
 //===============MembranePotentialValues============
